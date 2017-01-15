@@ -4,9 +4,9 @@ chmod +x sqltblefunc.sh
 function createdb() {
 	printf "\nEnter database name :\t"
 	read
-	if [ ! -d /home/$LOGAME/bashdbs/$REPLY ]
+	if [ ! -d /home/$LOGNAME/bashdbs/$REPLY ]
 	then
-		mkdir /home/$LGNAME/bashdbs/$REPLY
+		mkdir /home/$LOGNAME/bashdbs/$REPLY
 		printf "you successfully created $REPLY in '/home/$LOGNAME/bashdbs'\n"
 	else
 		printf "Database already exists !\n"
@@ -17,7 +17,7 @@ function createdb() {
 
 function showdb() {
 	i=1
-	if [ "`ls /home/$LOGNME/bashdbs`" == "" ]
+	if [ "`ls /home/$LOGNAME/bashdbs`" == "" ]
 	then
 		printf "No databases found !!\n"
 	else
@@ -27,17 +27,22 @@ function showdb() {
 			(( i=$i+1 ))
 		done
 	fi
-	sleep 
+	sleep 1 
 }
 
 function usedb() {
-	printf "Enter database NAME to use or type \n"
-	showdb
-	printf "Database NAME :\t"
-	read usdb
-	if [ -d  /home/$LOGNAME/bashdbs/$usdb ]
-	then
-		cd /home/$LOGNAME/bashdbs/$usdb
+	printf "Select database to use \n"
+#	showdb
+#	printf "Database NAME :\t"
+#	read usdb
+#	if [ -d  /home/$LOGNAME/bashdbs/$usdb ]
+#	then
+	select choice in `ls /home/$LOGNAME/bashdbs`
+	do
+	if [[ $REPLY -lt `ls /home/$LOGNAME/bashdbs|wc -w` ]]
+      	then
+       		usdb=$choice
+       		cd /home/$LOGNAME/bashdbs/$usdb
 		while true
 		do
 			PS3="->"
@@ -46,19 +51,22 @@ function usedb() {
 		        do
 		        case $REPLY in
                 		1)createtble
-                		break;;
+                		continue ;;
 				2)choosetble
-				break;;
+				continue ;;
                 		3)
-                		break 2;;
+                		break 3;;
 				*)printf "Not a valid choice!\nEnter value From 1 to 5."
         		esac
+        		done
+			printf "Database doesn\`t exist !!\n\n"
+			sleep 1
+			usedb
+		
 		done
-	else
-		printf "Database doesn\`t exist !!\n\n"
-		sleep 1
-		usedb
 	fi
+	
+	done
 }
 
 function deletedb() {

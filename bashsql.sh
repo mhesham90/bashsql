@@ -3,9 +3,9 @@ chmod +x sqlfunc.sh
 . ./sqlfunc.sh
 if [ ! -d /home/$LOGNAME/bashdbs ]
 then
-	mkdir /home/$LGNAME/bashdbs
+	mkdir /home/$LOGNAME/bashdbs
 fi
-printf "\n------------------------------------------------------------------\n\e[32;40;1mHello $LOGNME\e[0m\nThis is a simple bashsql DBMS\nEvery single letter in this script was written in vi editor\nIt\`s ok to use and modify it for free\nThis script was written by mhesham :)\n------------------------------------------------------------------\n"
+printf "\n------------------------------------------------------------------\n\e[32;40;1mHello $LOGNAME\e[0m\nThis is a simple bashsql DBMS\nEvery single letter in this script was written in vi editor\nIt\`s ok to use and modify it for free\nThis script was written by mhesham :)\n------------------------------------------------------------------\n"
 sleep 1
 
 while true
@@ -19,7 +19,7 @@ do
                 break;;
 		2)showdb
 		break;;
-                3)usdb
+                3)usedb
                 break;;
                 4)deletedb
                 break;;
@@ -27,5 +27,6 @@ do
                 break;;
 		*)printf "Not a valid choice!\nEnter value From 1 to 5."
         esac
+        done
 done
 

@@ -1,4 +1,6 @@
 #!/bin/bash
+chmod +x sqltblemodfunc.sh
+. ./sqltblemodfunc.sh
 
 function createtble() {
 	printf "Enter name for your new table\nName :\t"
@@ -13,7 +15,12 @@ function createtble() {
 			PS3="->"
 			while true
 			do
+				if [[ $num -eq 1 ]]
+				then
+				printf "Enter Primary key column name : "
+				else
 				printf "Enter column $num name : "
+				fi
 				read clnm
 				if echo ${colname[@]}|grep $clnm>/dev/null
 				then printf "Column exists !\n"
@@ -22,6 +29,7 @@ function createtble() {
 					break
 				fi
 			done
+			printf "choose column type\n"
 			select choice in 'char' 'integer'
 			do
 			case $REPLY in
@@ -32,6 +40,7 @@ function createtble() {
 				*)printf "Not a valid type!\nEnter 1 or 2 "
 			esac
 			done
+
 		done
 		echo ${coltype[@]}|awk '{printf $1;for(i=2;i<=NF;i++){printf ":"$i}printf"\n"}'>>$tblename
 		echo ${colname[@]}|awk '{printf $1;for(i=2;i<=NF;i++){printf ":"$i}printf"\n"}'>>$tblename
@@ -42,34 +51,32 @@ function createtble() {
 }
 
 function choosetble() {
+	printf "\n Choose table:\n"
 	select choice in `ls`
 	do
-		choiceno=0
-		for choice in `ls`
-		do
-			choiceno+=1
-			if [[ $choiceno -eq $REPLY ]]
+			if [[ $REPLY -lt `ls|wc -w` ]]
 			then
 				currtble=$choice
-				break 2
+				break 
 			fi
-		done
+	
 		printf "Not valid !!\nTry again"
 	done
-	
-	select choice in 'Insert into table' 'Update table' 'Delete' 'Display table' 'Drop table'
+	printf "\nSelect choice for table $currtble\n"	
+	select choice in 'Insert into table' 'Update table' 'Delete' 'Display table' 'Drop table' 'Back'
 	do
 	case $REPLY in
-		1)
+		1)insrt
 		break;;
-		2)
+		2)updt
 		break;;
-		3)
+		3)dlt
 		break;;
-		4)tail -n +2 $currtble|column -t -s:
+		4)disptble
 		break;;
-		5)echo rm currtble
+		5)echo rm $currtble
 		break;;
+		6)break;;
 		*)printf "Not a valid choice !"
 	esac
 	done
